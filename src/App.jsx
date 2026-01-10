@@ -25,6 +25,7 @@ function App() {
       <header>
         <h1>EnergiFri ⚡️</h1>
         <p>Heja dig, du är grym!</p>
+        <p>Du har en snygg stjärt!</p>
       </header>
 
       {userData && (
