@@ -18,14 +18,15 @@ export default function Settings({ currentData, onUpdate }) {
         applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY
       });
 
-      const { error } = await supabase
-        .from('push_subscriptions')
-        .insert([
-          { 
-            user_id: currentData.id, 
-            subscription_data: subscription 
-          }
-        ]);
+    const { error } = await supabase
+    .from('push_subscriptions')
+    .insert([
+        { 
+        // Vi säkerställer att vi skickar med rätt ID från currentData
+        user_id: currentData.id, 
+        subscription_data: subscription 
+        }
+    ]);
 
       if (error) throw error;
       alert("Notiser är nu aktiverade! 🔔");
