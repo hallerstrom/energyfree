@@ -1,42 +1,154 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Grundinställningar & Variabler */
+:root {
+  --primary: #3b82f6;
+  --secondary: #10b981;
+  --bg: #f1f5f9;
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+}
+
+body {
+  background-color: var(--bg);
+  margin: 0;
+  display: flex;
+  justify-content: center; /* Centrerar appen på datorn */
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, sans-serif;
+  user-select: none; /* Gör att det känns mer som en app */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px; /* Optimal mobilbredd */
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+/* Header & Texter */
+header {
   text-align: center;
+  margin-bottom: 30px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+header h1 {
+  margin: 0 0 5px 0; /* Drar upp rubriken och minskar avstånd neråt */
+  font-size: 2.2rem;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+header p {
+  margin: 0; /* Tar bort standardmarginaler så den ligger precis under H1 */
+  color: var(--text-muted);
+  font-size: 1.1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
+/* Kort-design */
 .card {
-  padding: 2em;
+  background: var(--card-bg);
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  color: var(--text-main);
 }
 
-.read-the-docs {
-  color: #888;
+h3 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* Progress-bars & Mål */
+.progress-section {
+  margin-bottom: 20px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.bar-bg {
+  width: 100%;
+  height: 12px;
+  background-color: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden; /* Viktigt för att fyllningen ska stanna inuti */
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Centrerad Inställningsknapp */
+.secondary-btn {
+  display: block;
+  margin: 40px auto; /* 40px marginal uppåt, auto för centrering */
+  width: auto;
+  min-width: 200px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid #cbd5e1;
+  padding: 12px 24px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.secondary-btn:hover {
+  background-color: #ffffff;
+  border-color: #94a3b8;
+  color: var(--text-main);
+  transform: translateY(-1px);
+}
+
+/* Anpassning för mobiler */
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 15px;
+  }
+  
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
+
+/* Modalen (Inställningar) */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 400px;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
