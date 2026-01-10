@@ -3,12 +3,12 @@
   "name": "EnergiFri",
   "icons": [
     {
-      "src": "icon-1921.png",
+      "src": "icon-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "icon-5121.png",
+      "src": "icon-512.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
