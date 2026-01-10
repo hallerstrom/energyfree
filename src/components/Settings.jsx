@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../supabaseClient';
+import { Save, RefreshCcw, X } from 'lucide-react';
 
 export default function Settings({ currentData, onUpdate }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,15 +24,13 @@ export default function Settings({ currentData, onUpdate }) {
   };
 
   const restartStreak = async () => {
-    const confirmRestart = window.confirm("Är du säker på att du vill börja om? Din streak kommer att nollställas till idag.");
-    
+    const confirmRestart = window.confirm("Är du säker? Din streak nollställs till just nu.");
     if (confirmRestart) {
       const now = new Date().toISOString();
       const { error } = await supabase
         .from('user_data')
         .update({ start_date: now })
         .eq('id', currentData.id);
-
       if (!error) {
         setIsOpen(false);
         onUpdate();
@@ -40,44 +39,69 @@ export default function Settings({ currentData, onUpdate }) {
   };
 
   if (!isOpen) return (
-    <button className="secondary-btn" onClick={() => setIsOpen(true)} style={{ marginTop: '20px' }}>
+    <button className="secondary-btn" onClick={() => setIsOpen(true)}>
       Inställningar & Nollställ
     </button>
   );
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content card">
-        <h3>Inställningar</h3>
+      <div className="modal-content card settings-modal">
+        <div className="modal-header">
+          <h3>Inställningar</h3>
+          <button className="close-icon" onClick={() => setIsOpen(false)}><X size={20}/></button>
+        </div>
         
-        <label className="label">Startdatum (när du slutade):</label>
-        <input 
-          type="datetime-local" 
-          value={form.start_date.slice(0, 16)} 
-          onChange={e => setForm({...form, start_date: new Date(e.target.value).toISOString()})} 
-        />
+        <div className="form-group">
+          <label>När slutade du?</label>
+          <input 
+            type="datetime-local" 
+            className="modern-input"
+            value={form.start_date.slice(0, 16)} 
+            onChange={e => setForm({...form, start_date: new Date(e.target.value).toISOString()})} 
+          />
+        </div>
         
-        <label className="label">Kostnad per burk (kr):</label>
-        <input type="number" value={form.cost_per_drink} onChange={e => setForm({...form, cost_per_drink: e.target.value})} />
+        <div className="form-group">
+          <label>Kostnad per burk (kr)</label>
+          <input 
+            type="number" 
+            className="modern-input"
+            value={form.cost_per_drink} 
+            onChange={e => setForm({...form, cost_per_drink: e.target.value})} 
+          />
+        </div>
         
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-          <div>
-            <label className="label">Mål (dagar):</label>
-            <input type="number" value={form.goal_days} onChange={e => setForm({...form, goal_days: e.target.value})} />
+        <div className="input-grid">
+          <div className="form-group">
+            <label>Mål (dagar)</label>
+            <input 
+              type="number" 
+              className="modern-input"
+              value={form.goal_days} 
+              onChange={e => setForm({...form, goal_days: e.target.value})} 
+            />
           </div>
-          <div>
-            <label className="label">Mål (kronor):</label>
-            <input type="number" value={form.goal_amount} onChange={e => setForm({...form, goal_amount: e.target.value})} />
+          <div className="form-group">
+            <label>Mål (kronor)</label>
+            <input 
+              type="number" 
+              className="modern-input"
+              value={form.goal_amount} 
+              onChange={e => setForm({...form, goal_amount: e.target.value})} 
+            />
           </div>
         </div>
 
-        <button onClick={saveSettings} style={{ backgroundColor: '#10b981', marginBottom: '10px' }}>Spara ändringar</button>
-        
-        <button onClick={restartStreak} style={{ backgroundColor: '#ef4444', marginBottom: '10px' }}>
-          ⚠️ Börja om från idag
-        </button>
-
-        <button className="secondary-btn" onClick={() => setIsOpen(false)}>Avbryt</button>
+        <div className="button-group">
+          <button className="save-btn" onClick={saveSettings}>
+            <Save size={18} /> Spara ändringar
+          </button>
+          
+          <button className="restart-btn" onClick={restartStreak}>
+            <RefreshCcw size={18} /> Börja om från idag
+          </button>
+        </div>
       </div>
     </div>
   );
