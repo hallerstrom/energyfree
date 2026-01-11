@@ -37,7 +37,7 @@ serve(async () => {
       await fetch(`https://ntfy.sh/${topic}`, {
         method: "POST",
         body: `Dag ${diffDays} – du har sparat ${savedMoney} kr`,
-        headers: { "Title": "Morgonnotis ✨" }
+        headers: { "Title": "Morgonnotis!" }
       });
     } catch (err) {
       console.error("Push-fel:", err);
