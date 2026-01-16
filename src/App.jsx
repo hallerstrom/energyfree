@@ -1,53 +1,28 @@
-import { useState, useEffect } from 'react';
-import { supabase } from './supabaseClient';
-import Stats from './components/Stats';
-import GoalProgress from './components/GoalProgress';
-import Settings from './components/Settings';
-import './App.css';
+import { useEffect, useState } from "react";
+import { supabase } from "./supabaseClient";
+import Auth from "./components/Auth";
+import Dashboard from "./components/Dashboard";
 
-function App() {
-  const [userData, setUserData] = useState(null);
+export default function App() {
+  const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
-    setLoading(true);
-    const { data } = await supabase.from('user_data').select('*').single();
-    if (data) setUserData(data);
-    setLoading(false);
-  };
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setLoading(false);
+    });
 
-  useEffect(() => { fetchData(); }, []);
+    const { data: listener } =
+      supabase.auth.onAuthStateChange((_event, session) => {
+        setSession(session);
+      });
 
-  if (loading) return <div className="loading">Laddar...</div>;
+    return () => listener.subscription.unsubscribe();
+  }, []);
 
-  return (
-    <div className="container">
-      <header>
-        <h1>EnergiFri ⚡️</h1>
-        <p>Heja dig, du är grym!</p>
-        <p>Du har en snygg stjärt!</p>
-      </header>
+  if (loading) return <p>Laddar...</p>;
+  if (!session) return <Auth />;
 
-      {userData && (
-        <main>
-          <Stats 
-            startDate={new Date(userData.start_date)} 
-            costPerDay={userData.cost_per_drink} 
-          />
-          <GoalProgress 
-            startDate={new Date(userData.start_date)} 
-            costPerDay={userData.cost_per_drink}
-            goalAmount={userData.goal_amount}
-            goalDays={userData.goal_days}
-          />
-          <Settings 
-            currentData={userData} 
-            onUpdate={fetchData} 
-          />
-        </main>
-      )}
-    </div>
-  );
+  return <Dashboard user={session.user} />;
 }
-
-export default App;
