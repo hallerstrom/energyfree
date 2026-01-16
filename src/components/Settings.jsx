@@ -5,37 +5,6 @@ import { Save, RefreshCcw, X, Bell } from 'lucide-react';
 export default function Settings({ currentData, onUpdate }) {
   const [isOpen, setIsOpen] = useState(false);
   const [form, setForm] = useState(currentData);
-  const [isSubscribing, setIsSubscribing] = useState(false);
-
-  // --- PUSH via ntfy.sh direkt från frontend ---
-  const sendDailyPush = async () => {
-    setIsSubscribing(true);
-    try {
-      const start = new Date(form.start_date).getTime();
-      const diffDays = Math.max(
-        0,
-        Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24))
-      );
-      const savedMoney = diffDays * form.cost_per_drink;
-
-      const topic = `energyfree_user_${currentData.id}`;
-
-      await fetch(`https://ntfy.sh/${topic}`, {
-        method: 'POST',
-        body: `Dag ${diffDays} – du har sparat ${savedMoney} kr`,
-        headers: { 'Title': 'Morgonnotis ✨' },
-      });
-
-      alert("Push skickad! 🔔");
-    } catch (err) {
-      console.error(err);
-      alert("Kunde inte skicka push. Kolla nätverk och ntfy.sh.");
-    } finally {
-      setIsSubscribing(false);
-    }
-  };
-  // ---------------------------------------------
-
   const saveSettings = async () => {
     const { error } = await supabase
       .from('user_data')
@@ -90,25 +59,6 @@ export default function Settings({ currentData, onUpdate }) {
             onChange={e => setForm({...form, start_date: new Date(e.target.value).toISOString()})}
           />
         </div>
-
-        {/* --- PUSH via ntfy.sh --- */}
-        <div className="form-group" style={{ marginBottom: '20px', padding: '15px', background: '#f8fafc', borderRadius: '12px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Bell size={16} /> Skicka daglig push
-          </label>
-          <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '10px' }}>
-            Få en push-notis varje dag med din nuvarande streak och pengar sparade.
-          </p>
-          <button
-            className="secondary-btn"
-            style={{ width: '100%', justifyContent: 'center' }}
-            onClick={sendDailyPush}
-            disabled={isSubscribing}
-          >
-            {isSubscribing ? 'Skickar...' : 'Skicka push nu'}
-          </button>
-        </div>
-        {/* ------------------- */}
 
         <div className="form-group">
           <label>Kostnad per burk (kr)</label>
